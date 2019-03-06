@@ -53,8 +53,7 @@ def createTranscribeJob( region, bucket, mediaFile ):
 	response = transcribe.start_transcription_job( TranscriptionJobName="transcribe_" + uuid.uuid4().hex + "_" + mediaFile , \
 		LanguageCode = "en-US", \
 		MediaFormat = "mp4", \
-		Media = { "MediaFileUri" : mediaUri }, \
-		Settings = { "VocabularyName" : "MyVocabulary" } \
+		Media = { "MediaFileUri" : mediaUri }
 		)
 	
 	# return the response structure found in the Transcribe Documentation

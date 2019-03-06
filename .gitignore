@@ -1,0 +1,6 @@
+.DS_Store
+*.mov
+*.srt
+*.pyc
+vids_to_process/
+subtitles/

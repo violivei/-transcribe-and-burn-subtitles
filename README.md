@@ -1,41 +1,27 @@
-# AWS VOD Captioning using AWS Transcribe
+# AWS Transcribe and FFMPEG burning of subtitles
 
-> Add subtitles to video with AWS machine learning services. Inlcuding AWS Polly, AWS Transcribe, and AWS Translate.
+This tool will take a video:
 
-## Overview
-This repository contains code for VOD subtitle creation, described in the AWS blog post [“Create video subtitles with translation using machine learning”](https://aws.amazon.com/blogs/machine-learning/create-video-subtitles-with-translation-using-machine-learning/).
+1. Transcribe it using AWS
+2. Allow you to proof read and edit the result
+3. Burn the subtitles into a video using FFMPEG.
 
-## Prerequisites
+This is useful for sites like Facebook or LinkedIn where the audio doesn't auto play but you want to grab the viewer's attention.
 
-- Set up an AWS account. ([instructions](https://AWS.amazon.com/free/?sc_channel=PS&sc_campaign=acquisition_US&sc_publisher=google&sc_medium=cloud_computing_b&sc_content=AWS_account_bmm_control_q32016&sc_detail=%2BAWS%20%2Baccount&sc_category=cloud_computing&sc_segment=102882724242&sc_matchtype=b&sc_country=US&s_kwcid=AL!4422!3!102882724242!b!!g!!%2BAWS%20%2Baccount&ef_id=WS3s1AAAAJur-Oj2:20170825145941:s))
-- Clone this repo.
-- The other requirements are listed in this ([blog post](https://aws.amazon.com/blogs/machine-learning/create-video-subtitles-with-translation-using-machine-learning/))  
-- Configure AWS CLI and a local credentials file. ([instructions](http://docs.AWS.amazon.com/cli/latest/userguide/cli-chap-welcome.html))  
+This is a heavy modification/simplification on this lovely repository: https://github.com/aws-samples/aws-transcribe-captioning-tools
 
+## Get the transcription
 
-## Getting Started
+1. Create an S3 bucket for your input videos and the output videos
+2. Put the videos you want to translate into the `vids_to_process` dir.
+3. Run `transcribeVideos.py`
 
-Head on over to this blog post to see the instructions to create captions with AWS Transcribe in the SRT format, create alternate language SRT files with AWS Translate, and use AWS Polly to create alternate language video files:
-https://aws.amazon.com/blogs/machine-learning/create-video-subtitles-with-translation-using-machine-learning/
+## Edit it
 
+1. Edit the generated subtitles in the `subtitles` dir
 
+## Build the video
 
+1. Run `pip install -r requirements.txt`
+1. Run the `burnSubtitles.py` script. It requires you have docker up and running
 
-## More AWS Transcribe Tools for Video
-
-If you just want to create an SRT or a VTT file, the tools directory contains Python code to convert AWS Transcribe JSON to an SRT or a VTT file. These files can be imported and used on web or desktop video players. 
-
-```shell
-python srt.py output_file_from_transcribe.json
-```
-
-
-| name | description | 
-|-------|-------------|
-|srt.py | Takes the JSON response from AWS Transcribe and converts to a captions.srt file |
-|vtt.py | Takes the JSON response from AWS Transcribe and converts to a captions.vtt file |
-
-
-## License Summary
-
-This sample code is made available under a modified MIT license. See the LICENSE file.
