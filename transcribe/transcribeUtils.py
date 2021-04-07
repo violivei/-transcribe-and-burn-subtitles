@@ -29,6 +29,10 @@
 import boto3
 import uuid
 import requests
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 # ==================================================================================
 # Function: createTranscribeJob
@@ -45,7 +49,7 @@ def createTranscribeJob( region, bucket, mediaFile ):
 	transcribe = boto3.client('transcribe')
 	
 	# Set up the full uri for the bucket and media file
-	mediaUri = "https://" + "s3-" + region + ".amazonaws.com/" + bucket + mediaFile 
+	mediaUri = "https://" + bucket + ".s3-" + region + ".amazonaws.com/" + mediaFile 
 	
 	print( "Creating Job: " + "transcribe" + mediaFile + " for " + mediaUri )
 	
@@ -53,7 +57,8 @@ def createTranscribeJob( region, bucket, mediaFile ):
 	response = transcribe.start_transcription_job( TranscriptionJobName="transcribe_" + uuid.uuid4().hex + "_" + mediaFile , \
 		LanguageCode = "en-US", \
 		MediaFormat = "mp4", \
-		Media = { "MediaFileUri" : mediaUri }
+		Media = { "MediaFileUri" : mediaUri }, \
+		OutputBucketName = bucket
 		)
 	
 	# return the response structure found in the Transcribe Documentation
@@ -81,8 +86,12 @@ def getTranscriptionJobStatus( jobName ):
 # ==================================================================================
 def getTranscript( transcriptURI ):
 	# Get the resulting Transcription Job and store the JSON response in transcript
-	result = requests.get( transcriptURI )
-
-	return result.text
+	s3 = boto3.resource('s3')
+	parsed_url = urlparse(transcriptURI, allow_fragments=False)
+	s3_uri = parsed_url.path.lstrip('/') + parsed_url.query
+	bucket, key = s3_uri.split('/')
+	obj = s3.Object(bucket, key)
+	data = obj.get()['Body'].read().decode('utf-8') 
+	return data
 
 	
