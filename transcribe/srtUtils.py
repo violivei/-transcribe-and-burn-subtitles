@@ -30,7 +30,7 @@ import json
 import boto3
 import re
 import codecs
-from audioUtils import *
+from transcribe.audioUtils import *
 
 
 
@@ -122,7 +122,7 @@ def getPhrasesFromTranslation( translation, targetLangCode ):
 	c = 0
 	seconds = 0
 
-	print "==> Creating phrases from translation..."
+	print("==> Creating phrases from translation...")
 
 	for word in words:
 
@@ -174,7 +174,9 @@ def getPhrasesFromTranscript( transcript ):
 	# This function is intended to be called with the JSON structure output from the Transcribe service.  However,
 	# if you only have the translation of the transcript, then you should call getPhrasesFromTranslation instead
 
-	# Now create phrases from the translation
+	# # Now create phrases from the translation
+	# with open(transcript) as jsonfile:
+	# 	ts = json.load(jsonfile)
 	ts = json.loads( transcript )
 	items = ts['results']['items']
 	#print( items )
@@ -186,7 +188,7 @@ def getPhrasesFromTranscript( transcript ):
 	x = 0
 	c = 0
 
-	print "==> Creating phrases from transcript..."
+	print("==> Creating phrases from transcript...")
 
 	for item in items:
 
@@ -263,7 +265,7 @@ def translateTranscript( transcript, sourceLangCode, targetLangCode, region ):
 #                 filename - the name of the SRT output file (e.g. "mySRT.srt")
 # ==================================================================================
 def writeSRT( phrases, filename ):
-	print "==> Writing phrases to disk..."
+	print("==> Writing phrases to disk...")
 
 	# open the files
 	e = codecs.open(filename,"w+", "utf-8")
